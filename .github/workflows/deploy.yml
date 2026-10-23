@@ -1,0 +1,39 @@
+# Continuous delivery: ships Glue scripts and the ingestion Lambda to AWS.
+#
+# Not active until Phase 7. To enable it, create in the GitHub repo settings:
+#   Variables: AWS_REGION, AWS_DEPLOY_ROLE_ARN, ARTIFACT_BUCKET, INGEST_LAMBDA_NAME
+# The role must trust GitHub's OIDC provider (no long-lived access keys in GitHub).
+# Once configured, change the trigger to also run on pushes to main.
+
+name: Deploy
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ vars.AWS_DEPLOY_ROLE_ARN != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Upload Glue job scripts
+        run: aws s3 sync glue_jobs/ "s3://${{ vars.ARTIFACT_BUCKET }}/scripts/glue_jobs/" --delete
+
+      - name: Package and deploy ingestion Lambda
+        run: |
+          mkdir -p build
+          cp lambda_functions/ingest_order/handler.py src/validation.py build/
+          (cd build && zip -q ../ingest_order.zip handler.py validation.py)
+          aws lambda update-function-code \
+            --function-name "${{ vars.INGEST_LAMBDA_NAME }}" \
+            --zip-file fileb://ingest_order.zip

@@ -1,0 +1,47 @@
+# --- Secrets: never commit credentials ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.aws/
+credentials
+config.local.*
+
+# --- Generated data (re-create with: python src/generate_data.py) ---
+data/*
+!data/.gitkeep
+*.parquet
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- Build artifacts ---
+build/
+dist/
+*.zip
+
+# --- Terraform (Phase 7) ---
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!example.tfvars
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Tableau extracts ---
+*.hyper
