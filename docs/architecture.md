@@ -1,5 +1,11 @@
 # Architecture
 
+## System diagram
+
+[![Architecture diagram with AWS service icons](images/architecture.png)](images/architecture.png)
+
+The diagram shows the batch path, the streaming path, the S3 data lake, Glue processing and orchestration, the Redshift star schema with Tableau, and the CI/CD pipeline. The raw zone and the ETL output zones are one S3 bucket, drawn in two frames so the data flow reads left to right. Service icons are from the AWS Architecture Icons. An earlier reference design is kept in [images/reference-architecture.jpg](images/reference-architecture.jpg).
+
 ## Goals
 
 1. Keep every original record (raw zone in S3) so any transformation can be re-run.
