@@ -25,6 +25,10 @@ real-time orders on top of the batch pipeline.
 
 ## Architecture
 
+[![Architecture diagram with AWS service icons](docs/images/architecture.png)](docs/images/architecture.png)
+
+*Click the image to open it full size. The same flow as an editable diagram:*
+
 ```mermaid
 flowchart LR
     subgraph Sources
@@ -76,7 +80,10 @@ flowchart LR
 - **Redshift** is the analytical warehouse. It is provisioned late (Phase 4) to keep costs down.
 - **DynamoDB** is added only if needed (e.g. processed-event IDs for idempotency).
 
-More detail: [docs/architecture.md](docs/architecture.md). An earlier reference design
+More detail: [docs/architecture.md](docs/architecture.md). Service icons are from the
+[AWS Architecture Icons](https://aws.amazon.com/architecture/icons/) (via
+[awslabs/aws-icons-for-plantuml](https://github.com/awslabs/aws-icons-for-plantuml)).
+An earlier reference design
 (EC2 scraper → Kinesis → S3 → Lambda → Glue → Athena/Redshift → QuickSight) is kept in
 [docs/images/reference-architecture.jpg](docs/images/reference-architecture.jpg).
 
